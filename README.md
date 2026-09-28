@@ -2,6 +2,10 @@
 
 Drive an F1-style car around the Circuit de Monaco as a standalone desktop application.
 Built using [Tauri v2](https://tauri.app/), [Three.js](https://threejs.org/), and [MuJoCo WASM](https://mujoco.org/).
+## 📖 User Manuals / 操作マニュアル
+
+- 🇯🇵 **[日本語版 操作マニュアル (MANUAL_JA.md)](MANUAL_JA.md)**
+- 🇺🇸 **[English User Manual (MANUAL_EN.md)](MANUAL_EN.md)**
 
 ## Development & Build Commands
 
