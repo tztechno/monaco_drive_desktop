@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Monaco Street Circuit</title>
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <main class="stage">
+      <div class="view" id="main-view">
+        <canvas id="main-canvas"></canvas>
+      </div>
+
+      <section class="tile">
+        <b class="view-title overhead" data-i18n="overhead">🌐 Overhead Map</b>
+        <div class="view" id="overhead-view" style="aspect-ratio: 500 / 380">
+          <canvas id="overhead-canvas"></canvas>
+          <svg class="overlay" viewBox="0 0 500 380" preserveAspectRatio="none">
+            <polygon points="274,190 254,180 254,200" fill="rgb(255,80,80)" stroke="#fff" stroke-width="1.5" />
+            <rect x="232" y="185" width="22" height="10" fill="rgb(255,80,80)" stroke="#fff" stroke-width="1.5" />
+          </svg>
+        </div>
+      </section>
+
+      <pre class="hud" id="hud"></pre>
+
+      <div class="alert" id="alert" hidden>
+        <div class="alert-box">
+          <b id="alert-title"></b>
+          <span id="alert-sub"></span>
+        </div>
+      </div>
+
+      <div class="controls">
+        <div class="row">
+          <div class="group" data-i18n-title="mode.title">
+            <button class="btn seg" data-mode="manual" data-i18n="mode.manual">🎮 Manual</button>
+            <button class="btn seg" data-mode="demo" data-i18n="mode.demo">🤖 Demo</button>
+          </div>
+          <div class="group" data-i18n-title="view.title">
+            <button class="btn seg" data-view="cockpit" data-i18n="view.cockpit">🪖 Cockpit</button>
+            <button class="btn seg" data-view="chase" data-i18n="view.chase">🚗 Chase</button>
+            <button class="btn seg" data-view="trackside" data-i18n="view.trackside">🎥 Trackside</button>
+          </div>
+          <div class="group">
+            <button class="btn" style="--bg:#50a050" id="start" data-i18n="sim.start" data-i18n-title="sim.start.title">▶ Start</button>
+            <button class="btn" style="--bg:#a04040" id="stop" data-i18n="sim.stop" data-i18n-title="sim.stop.title">■ Stop</button>
+            <button class="btn" style="--bg:#707070" id="reset" data-i18n-title="sim.reset.title">↺</button>
+          </div>
+          <button class="btn lang" id="lang" data-i18n-title="lang.title">EN / 日本語</button>
+          <a class="btn lang help" id="help" href="manual.html" target="_blank" rel="noopener" data-i18n-title="help.title">?</a>
+        </div>
+        <div class="row manual-only">
+          <label class="slider-row" data-i18n-title="steer.title">
+            <span>🔄</span>
+            <input id="steer" type="range" min="-0.55" max="0.55" step="0.005" value="0" />
+            <output id="steer-readout">0.00</output>
+          </label>
+          <div class="group">
+            <button class="btn" style="--bg:#3a8e3a" data-dir="forward" data-i18n="dir.forward" data-i18n-title="dir.forward.title">▶ FWD</button>
+            <button class="btn" style="--bg:#606060" data-dir="stop" data-i18n-title="dir.stop.title">■</button>
+            <button class="btn" style="--bg:#7a4a20" data-dir="reverse" data-i18n="dir.reverse" data-i18n-title="dir.reverse.title">◀ REV</button>
+          </div>
+          <div class="group">
+            <button class="btn toggle" style="--bg:#5cb85c" data-pedal="accel" aria-pressed="false" data-i18n="pedal.accel" data-i18n-title="pedal.accel.title">🔺 ACCEL</button>
+            <button class="btn toggle" style="--bg:#3a7fc0" data-pedal="hold" aria-pressed="false" data-i18n="pedal.hold" data-i18n-title="pedal.hold.title">⏸ HOLD</button>
+            <button class="btn toggle" style="--bg:#f0ad4e" data-pedal="brake" aria-pressed="false" data-i18n="pedal.brake" data-i18n-title="pedal.brake.title">🔻 BRAKE</button>
+          </div>
+        </div>
+        <div id="status" class="status"></div>
+      </div>
+
+      <p class="credit" id="credit"></p>
+    </main>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

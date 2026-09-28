@@ -1,0 +1,510 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Monaco Street Circuit – User Manual</title>
+    <style>
+      :root {
+        --bg: #f7f7f5;
+        --fg: #1d1d1f;
+        --muted: #5f6368;
+        --card: #ffffff;
+        --line: #dcdcd6;
+        --accent: #2f6fb8;
+        --warn: #b3261e;
+        --kbd: #eeeeea;
+        font-family: system-ui, -apple-system, 'Segoe UI', 'Hiragino Sans', 'Noto Sans JP', sans-serif;
+        line-height: 1.65;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme='light']) {
+          --bg: #17181b;
+          --fg: #e8e8ea;
+          --muted: #a2a5ab;
+          --card: #202227;
+          --line: #34363d;
+          --accent: #7fb2ee;
+          --warn: #ff8a80;
+          --kbd: #2c2e34;
+        }
+      }
+      * { box-sizing: border-box; }
+      body { margin: 0; background: var(--bg); color: var(--fg); }
+      /* Show only the selected language */
+      body[data-lang='en'] [lang='ja'], body[data-lang='ja'] [lang='en'] { display: none !important; }
+
+      header {
+        position: sticky; top: 0; z-index: 1;
+        display: flex; align-items: center; justify-content: space-between; gap: 12px;
+        padding: 10px 16px; background: var(--card); border-bottom: 1px solid var(--line);
+      }
+      header b { font-size: 15px; }
+      .switch { display: flex; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+      .switch button {
+        border: 0; padding: 5px 12px; background: transparent; color: var(--fg); font: inherit; font-size: 13px;
+        cursor: pointer;
+      }
+      .switch button[aria-pressed='true'] { background: var(--accent); color: #fff; }
+
+      main { max-width: 880px; margin: 0 auto; padding: 8px 16px 64px; }
+      h1 { font-size: 28px; margin: 24px 0 4px; }
+      .lead { color: var(--muted); margin: 0 0 20px; }
+      h2 { font-size: 20px; margin: 40px 0 10px; padding-top: 8px; border-top: 1px solid var(--line); }
+      h3 { font-size: 16px; margin: 22px 0 6px; }
+      a { color: var(--accent); }
+      nav.toc { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 10px 16px; }
+      nav.toc ol { margin: 4px 0; padding-left: 22px; columns: 2; column-gap: 28px; }
+      @media (max-width: 600px) { nav.toc ol { columns: 1; } }
+      figure { margin: 16px 0; }
+      figure img { display: block; width: 100%; height: auto; border-radius: 8px; border: 1px solid var(--line); }
+      figcaption { color: var(--muted); font-size: 13px; margin-top: 6px; }
+      .shots { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+      .shots figure { margin: 0; }
+      @media (max-width: 700px) { .shots { grid-template-columns: 1fr; } }
+      .table-wrap { overflow-x: auto; }
+      table { width: 100%; border-collapse: collapse; margin: 8px 0 12px; font-size: 14px; }
+      th, td { text-align: left; vertical-align: top; padding: 7px 10px; border-bottom: 1px solid var(--line); }
+      th { color: var(--muted); font-weight: 600; font-size: 13px; }
+      td:first-child { white-space: nowrap; }
+      kbd {
+        display: inline-block; min-width: 1.6em; padding: 0 6px; border: 1px solid var(--line); border-bottom-width: 2px;
+        border-radius: 4px; background: var(--kbd); font: 12px/1.7 ui-monospace, Menlo, monospace; text-align: center;
+      }
+      code { font: 13px ui-monospace, Menlo, monospace; background: var(--kbd); padding: 1px 5px; border-radius: 4px; }
+      .note {
+        background: var(--card); border: 1px solid var(--line); border-left: 4px solid var(--accent);
+        border-radius: 6px; padding: 10px 14px; margin: 12px 0;
+      }
+      .note.warn { border-left-color: var(--warn); }
+      ol.steps li, ul li { margin: 4px 0; }
+      footer { color: var(--muted); font-size: 12px; margin-top: 48px; }
+    </style>
+  </head>
+  <body data-lang="en">
+    <header>
+      <b><span lang="en">Monaco Street Circuit · User Manual</span><span lang="ja">モナコ市街地サーキット · 使用マニュアル</span></b>
+      <div class="switch" role="group" aria-label="Language">
+        <button data-set-lang="en" aria-pressed="true">English</button>
+        <button data-set-lang="ja" aria-pressed="false">日本語</button>
+      </div>
+    </header>
+
+    <main>
+      <!-- ───────────────────────────── ENGLISH ───────────────────────────── -->
+      <article lang="en">
+        <h1>Monaco Street Circuit</h1>
+        <p class="lead">
+          Drive an F1-style car around the Circuit de Monaco, or sit back and let the demo driver take a lap.
+          The car's physics comes from the MuJoCo physics engine, running in your browser.
+        </p>
+
+        <nav class="toc">
+          <b>Contents</b>
+          <ol>
+            <li><a href="#en-start">Quick start</a></li>
+            <li><a href="#en-screen">The screen</a></li>
+            <li><a href="#en-manual">Driving it yourself</a></li>
+            <li><a href="#en-demo">Demo mode</a></li>
+            <li><a href="#en-cameras">Cameras</a></li>
+            <li><a href="#en-laps">Lap timing</a></li>
+            <li><a href="#en-warnings">Warnings and sound</a></li>
+            <li><a href="#en-keys">Keyboard shortcuts</a></li>
+            <li><a href="#en-url">Link options</a></li>
+            <li><a href="#en-trouble">Troubleshooting</a></li>
+            <li><a href="#en-credits">Map data and credits</a></li>
+          </ol>
+        </nav>
+
+        <h2 id="en-start">1. Quick start</h2>
+        <p><b>Just watch a lap</b></p>
+        <ol class="steps">
+          <li>Wait until the status line under the buttons says <i>Press ▶ Start to begin</i>.</li>
+          <li>Click <b>🤖 Demo</b>, then <b>▶ Start</b>.</li>
+          <li>Try the three cameras: <b>🪖 Cockpit</b>, <b>🚗 Chase</b> and <b>🎥 Trackside</b>.</li>
+        </ol>
+        <p><b>Drive it yourself</b></p>
+        <ol class="steps">
+          <li>Make sure <b>🎮 Manual</b> is selected, then click <b>▶ Start</b>.</li>
+          <li>Click <b>▶ FWD</b> to pick the direction. The car does not move until you choose one.</li>
+          <li>Click <b>🔺 ACCEL</b> to speed up. It stays on until you press another pedal.</li>
+          <li>Steer with the slider or the <kbd>←</kbd> <kbd>→</kbd> keys.
+            Use <b>🔻 BRAKE</b> before corners and <b>⏸ HOLD</b> to keep your speed.</li>
+        </ol>
+        <figure>
+          <img src="manual/chase-en.jpg" alt="Chase view on the grid, with the overhead map, HUD and control bar" loading="lazy" />
+          <figcaption>Chase view on the starting grid.</figcaption>
+        </figure>
+
+        <h2 id="en-screen">2. The screen</h2>
+        <div class="table-wrap"><table>
+          <tr><th>Area</th><th>What it shows</th></tr>
+          <tr><td>Main view</td><td>Fills the window. It shows whichever camera you picked.</td></tr>
+          <tr><td>Overhead Map (top left)</td><td>The area around the car, seen from 150 m up. The red arrow is your car.</td></tr>
+          <tr><td>HUD (top right)</td><td>Speed, lap number, current / last / best lap time, the steering angle actually sent to the wheels, and the mode. In Manual mode it also shows your direction and pedal.</td></tr>
+          <tr><td>Credit (top centre)</td><td>Where the satellite imagery and elevation data come from.</td></tr>
+          <tr><td>Control bar (bottom)</td><td>Top row: mode, camera, Start / Stop / Reset, language, <b>?</b> (this manual).<br />Bottom row: the manual driving controls. They are greyed out in Demo mode.<br />Below the buttons is the status line.</td></tr>
+        </table></div>
+
+        <h2 id="en-manual">3. Driving it yourself</h2>
+        <h3>Direction</h3>
+        <div class="table-wrap"><table>
+          <tr><th>Button</th><th>Effect</th></tr>
+          <tr><td><b>▶ FWD</b></td><td>Drive forwards, up to 300 km/h.</td></tr>
+          <tr><td><b>■</b></td><td>Stop. With no pedal pressed, the car brakes to a standstill.</td></tr>
+          <tr><td><b>◀ REV</b></td><td>Reverse, up to about 30 km/h. Handy for backing off a barrier.</td></tr>
+        </table></div>
+        <h3>Pedals</h3>
+        <p>
+          You can have only one pedal on at a time. Pressing another pedal switches to it, and pressing the
+          one that is on releases it.
+        </p>
+        <div class="table-wrap"><table>
+          <tr><th>Pedal</th><th>Effect</th></tr>
+          <tr><td><b>🔺 ACCEL</b></td><td>Speeds up in the chosen direction, about 0–100 km/h in 3 seconds.</td></tr>
+          <tr><td><b>⏸ HOLD</b></td><td>Keeps the speed you have now, like cruise control.</td></tr>
+          <tr><td><b>🔻 BRAKE</b></td><td>Slows down to a stop.</td></tr>
+          <tr><td>(none)</td><td>The car coasts and slowly loses speed.</td></tr>
+        </table></div>
+        <h3>Steering</h3>
+        <p>
+          Drag the 🔄 slider, or press <kbd>←</kbd> / <kbd>→</kbd> to move it a step at a time.
+          <kbd>C</kbd> centres it. The slider stays where you leave it, so remember to straighten up after a corner.
+        </p>
+        <div class="note">
+          At speed, the car turns the wheels less than the slider asks for, so it stays stable.
+          At 100 km/h you get about 40&nbsp;% of the slider; at 200 km/h about 15&nbsp;%; near top speed under 10&nbsp;%.
+          The HUD's <i>Steer</i> line shows the angle the wheels actually get.
+          The practical upshot: <b>brake before a corner, then turn</b>.
+        </div>
+        <h3>Tips for Monaco</h3>
+        <ul>
+          <li>The circuit is narrow and lined with barriers everywhere. There is no run-off.</li>
+          <li>Slow right down for Sainte Dévote (the first corner), the Casino, the hairpin, the chicane after the tunnel and Rascasse.</li>
+          <li>The tunnel and the run along the harbour are the fastest parts.</li>
+          <li>If you are stuck against a barrier, click <b>◀ REV</b> and <b>🔺 ACCEL</b> to back off, then go forward again. Or press <b>↺</b>.</li>
+        </ul>
+
+        <h2 id="en-demo">4. Demo mode</h2>
+        <p>
+          In <b>🤖 Demo</b>, an autopilot follows the racing line. It brakes for each corner from a pre-computed speed
+          plan. A lap takes a little over two minutes.
+        </p>
+        <ul>
+          <li>You can switch modes at any time, even while the car is moving.</li>
+          <li>Switching to <b>🎮 Manual</b> hands the car over at its current speed: <b>▶ FWD</b> and <b>⏸ HOLD</b> are selected and the steering is centred.</li>
+          <li>Switching back to Demo lets the autopilot pick up from wherever the car is.</li>
+        </ul>
+        <figure>
+          <img src="manual/trackside-en.jpg" alt="Trackside camera following the car through a corner in Demo mode" loading="lazy" />
+          <figcaption>Demo mode seen from a trackside camera.</figcaption>
+        </figure>
+
+        <h2 id="en-cameras">5. Cameras</h2>
+        <div class="shots">
+          <figure><img src="manual/cockpit-en.jpg" alt="Cockpit camera" loading="lazy" /><figcaption>🪖 Cockpit</figcaption></figure>
+          <figure><img src="manual/chase-en.jpg" alt="Chase camera" loading="lazy" /><figcaption>🚗 Chase</figcaption></figure>
+          <figure><img src="manual/trackside-en.jpg" alt="Trackside camera" loading="lazy" /><figcaption>🎥 Trackside</figcaption></figure>
+        </div>
+        <div class="table-wrap"><table>
+          <tr><th>Camera</th><th>View</th></tr>
+          <tr><td><b>🪖 Cockpit</b></td><td>The driver's eye: the halo, front wheels and nose in front of you.</td></tr>
+          <tr><td><b>🚗 Chase</b></td><td>Slightly behind and above the car. The easiest view to drive with.</td></tr>
+          <tr><td><b>🎥 Trackside</b></td><td>A spectator's view. Camera posts stand beside the track about every 130 m. The nearest one follows the car and zooms in like a TV camera, and the view jumps to the next post as the car passes.</td></tr>
+        </table></div>
+        <p>Press <kbd>V</kbd> to cycle through the cameras.</p>
+
+        <h2 id="en-laps">6. Lap timing</h2>
+        <ul>
+          <li>You start on the grid, just behind the chequered start/finish line. The HUD shows <i>Lap: grid</i>.</li>
+          <li>Crossing the line starts lap 1 and its timer. Every later crossing ends a lap and updates <i>Last</i> and <i>Best</i>.</li>
+          <li>Times are measured in simulated time. If your computer can't keep up, the laps still count correctly.</li>
+          <li><b>↺ Reset</b> puts the car back on the grid and clears the lap times.</li>
+        </ul>
+
+        <h2 id="en-warnings">7. Warnings and sound</h2>
+        <div class="table-wrap"><table>
+          <tr><th>Warning</th><th>When</th><th>What happens</th></tr>
+          <tr><td><b>⚠ CRASH</b></td><td>The car touches a barrier</td><td>A flashing red overlay and three beeps. It clears 1.5 s after the car is free. Driving continues.</td></tr>
+          <tr><td><b>⚠ OUT OF BOUNDS</b></td><td>The car reaches the edge of the map</td><td>Same as a crash. There is an invisible wall there.</td></tr>
+          <tr><td><b>⚠ ROLLOVER</b></td><td>The car stays tipped more than about 73° for 0.2 s</td><td>The simulation stops and the warning stays up. Press <b>↺ Reset</b> to continue.</td></tr>
+        </table></div>
+        <div class="note">
+          Browsers only allow sound after you interact with the page. The alarm works once you have pressed
+          <b>▶ Start</b>. If you opened the app with <code>autostart</code>, press <b>▶ Start</b> once to turn sound on.
+        </div>
+
+        <h2 id="en-keys">8. Keyboard shortcuts</h2>
+        <div class="table-wrap"><table>
+          <tr><th>Key</th><th>Action</th><th>Mode</th></tr>
+          <tr><td><kbd>←</kbd> <kbd>→</kbd></td><td>Steer left / right one step</td><td>Manual</td></tr>
+          <tr><td><kbd>C</kbd></td><td>Centre the steering</td><td>Manual</td></tr>
+          <tr><td><kbd>F</kbd> <kbd>S</kbd> <kbd>R</kbd></td><td>Forward / Stop / Reverse</td><td>Manual</td></tr>
+          <tr><td><kbd>Space</kbd> or <kbd>W</kbd></td><td>ACCEL on / off</td><td>Manual</td></tr>
+          <tr><td><kbd>H</kbd></td><td>HOLD on / off</td><td>Manual</td></tr>
+          <tr><td><kbd>B</kbd></td><td>BRAKE on / off</td><td>Manual</td></tr>
+          <tr><td><kbd>V</kbd></td><td>Next camera</td><td>Both</td></tr>
+          <tr><td><kbd>M</kbd></td><td>Switch Manual ⇄ Demo</td><td>Both</td></tr>
+          <tr><td><kbd>L</kbd></td><td>Switch English ⇄ 日本語</td><td>Both</td></tr>
+        </table></div>
+        <p>Hover over a button to see its shortcut.</p>
+
+        <h2 id="en-url">9. Link options</h2>
+        <p>Add these to the app's address to open it in a particular state. This is handy for sharing a link.</p>
+        <div class="table-wrap"><table>
+          <tr><th>Option</th><th>Values</th></tr>
+          <tr><td><code>mode</code></td><td><code>manual</code> or <code>demo</code></td></tr>
+          <tr><td><code>view</code></td><td><code>cockpit</code>, <code>chase</code> or <code>trackside</code></td></tr>
+          <tr><td><code>lang</code></td><td><code>en</code> or <code>ja</code></td></tr>
+          <tr><td><code>autostart</code></td><td>(no value) start the simulation straight away</td></tr>
+        </table></div>
+        <p>Example: <code>index.html?mode=demo&amp;view=trackside&amp;autostart</code> opens a demo lap on the trackside cameras.</p>
+
+        <h2 id="en-trouble">10. Troubleshooting</h2>
+        <div class="table-wrap"><table>
+          <tr><th>Problem</th><th>What to try</th></tr>
+          <tr><td>Stuck on <i>Loading Monaco…</i></td><td>The first load downloads about 14 MB, so give it a moment. The app has to be opened from a web server (for example <code>npm run dev</code>). Opening <code>index.html</code> straight from disk doesn't work.</td></tr>
+          <tr><td><i>Failed to load</i></td><td>Reload the page. The message after it names the file that failed.</td></tr>
+          <tr><td>Black or empty view</td><td>Your browser needs WebGL and WebAssembly. Use a recent Chrome, Edge, Firefox or Safari, and check that hardware acceleration is on.</td></tr>
+          <tr><td>Choppy or slow</td><td>Make the window smaller, or close other heavy tabs. The app draws two views (main and overhead) every frame.</td></tr>
+          <tr><td>The car won't move</td><td>Check that the status line says <i>Running</i>, that <b>▶ FWD</b> is selected and that <b>🔺 ACCEL</b> is on. After a rollover, press <b>↺ Reset</b>.</td></tr>
+          <tr><td>The car won't turn at speed</td><td>That's the speed-sensitive steering. Brake first.</td></tr>
+          <tr><td>No sound</td><td>Press <b>▶ Start</b> once, and check that the tab isn't muted.</td></tr>
+        </table></div>
+
+        <h2 id="en-credits">11. Map data and credits</h2>
+        <ul>
+          <li>Terrain: SRTM 1″ elevation data.</li>
+          <li>Satellite imagery: <a href="https://s2maps.eu" target="_blank" rel="noopener">Sentinel-2 cloudless 2016</a> by EOX IT Services GmbH (contains modified Copernicus Sentinel data 2016), CC BY 4.0.</li>
+          <li>Streets, blocks, parks and the circuit layout were traced from a circuit schematic. Buildings are simplified, and their heights are illustrative, not measured.</li>
+          <li>Physics: <a href="https://mujoco.org" target="_blank" rel="noopener">MuJoCo</a>. Rendering: <a href="https://threejs.org" target="_blank" rel="noopener">three.js</a>.</li>
+          <li>The car is a generic F1-style model in a dark-blue, red and yellow livery. It carries no team or sponsor branding.</li>
+          <li>Differences from the real circuit: the traced lap is 3,211 m (the real one is 3,337 m), and Rascasse and the hairpin were widened slightly so the car can get round.</li>
+        </ul>
+      </article>
+
+      <!-- ───────────────────────────── 日本語 ───────────────────────────── -->
+      <article lang="ja">
+        <h1>モナコ市街地サーキット</h1>
+        <p class="lead">
+          F1 風のマシンでモナコ市街地サーキットを走るアプリです。デモ走行を眺めることもできます。
+          車の動きは、ブラウザ内で動く物理エンジン MuJoCo が計算しています。
+        </p>
+
+        <nav class="toc">
+          <b>目次</b>
+          <ol>
+            <li><a href="#ja-start">すぐに始める</a></li>
+            <li><a href="#ja-screen">画面の見かた</a></li>
+            <li><a href="#ja-manual">手動で運転する</a></li>
+            <li><a href="#ja-demo">デモ走行</a></li>
+            <li><a href="#ja-cameras">カメラ</a></li>
+            <li><a href="#ja-laps">ラップタイム</a></li>
+            <li><a href="#ja-warnings">警告とアラート音</a></li>
+            <li><a href="#ja-keys">キーボード操作</a></li>
+            <li><a href="#ja-url">リンクのオプション</a></li>
+            <li><a href="#ja-trouble">困ったときは</a></li>
+            <li><a href="#ja-credits">地図データとクレジット</a></li>
+          </ol>
+        </nav>
+
+        <h2 id="ja-start">1. すぐに始める</h2>
+        <p><b>デモ走行を見る</b></p>
+        <ol class="steps">
+          <li>ボタンの下の状態表示が「▶ 開始 を押してください」になるまで待ちます。</li>
+          <li><b>🤖 デモ</b> を押してから <b>▶ 開始</b> を押します。</li>
+          <li><b>🪖 運転席</b>・<b>🚗 後方</b>・<b>🎥 定点</b> の3つのカメラを切り替えてみてください。</li>
+        </ol>
+        <p><b>自分で運転する</b></p>
+        <ol class="steps">
+          <li><b>🎮 手動</b> が選ばれていることを確かめて、<b>▶ 開始</b> を押します。</li>
+          <li><b>▶ 前進</b> を押して進む向きを決めます。向きを選ぶまで車は動きません。</li>
+          <li><b>🔺 加速</b> を押すと加速します。別のペダルを押すまで加速し続けます。</li>
+          <li>スライダーか <kbd>←</kbd> <kbd>→</kbd> キーでハンドルを切ります。
+            コーナーの手前では <b>🔻 減速</b>、速度を保ちたいときは <b>⏸ 維持</b> を使います。</li>
+        </ol>
+        <figure>
+          <img src="manual/chase-ja.jpg" alt="スタート位置の後方ビュー。上空マップ・HUD・操作パネルが見える" loading="lazy" />
+          <figcaption>スタート位置での後方ビュー</figcaption>
+        </figure>
+
+        <h2 id="ja-screen">2. 画面の見かた</h2>
+        <div class="table-wrap"><table>
+          <tr><th>場所</th><th>表示内容</th></tr>
+          <tr><td>メイン画面</td><td>ウィンドウ全体に、選んだカメラの映像を表示します。</td></tr>
+          <tr><td>上空マップ（左上）</td><td>車のまわりを高さ 150 m から見下ろした映像です。赤い矢印が自車です。</td></tr>
+          <tr><td>HUD（右上）</td><td>速度、周回数、今回・前周・ベストのラップタイム、実際に車輪に伝わっているステア角、走行モードです。手動モードでは進む向きとペダルも表示します。</td></tr>
+          <tr><td>クレジット（上中央）</td><td>衛星画像と標高データの出典です。</td></tr>
+          <tr><td>操作パネル（下）</td><td>上の段：走行モード、カメラ、開始・停止・リセット、表示言語、<b>?</b>（このマニュアル）<br />下の段：手動運転用の操作。デモ中は灰色になって押せません。<br />いちばん下は状態表示です。</td></tr>
+        </table></div>
+
+        <h2 id="ja-manual">3. 手動で運転する</h2>
+        <h3>進む向き</h3>
+        <div class="table-wrap"><table>
+          <tr><th>ボタン</th><th>動き</th></tr>
+          <tr><td><b>▶ 前進</b></td><td>前に進みます。最高 300 km/h です。</td></tr>
+          <tr><td><b>■</b></td><td>停止です。ペダルを何も押していなければ、ブレーキをかけて止まります。</td></tr>
+          <tr><td><b>◀ 後退</b></td><td>後ろに進みます。最高 約 30 km/h です。ガードレールから離れるときに使います。</td></tr>
+        </table></div>
+        <h3>ペダル</h3>
+        <p>ペダルは同時に1つしか押せません。別のペダルを押すとそちらに切り替わり、押されているペダルをもう一度押すと解除されます。</p>
+        <div class="table-wrap"><table>
+          <tr><th>ペダル</th><th>動き</th></tr>
+          <tr><td><b>🔺 加速</b></td><td>選んだ向きに加速します。0→100 km/h はおよそ3秒です。</td></tr>
+          <tr><td><b>⏸ 維持</b></td><td>いまの速度を保ちます（クルーズコントロール）。</td></tr>
+          <tr><td><b>🔻 減速</b></td><td>止まるまで減速します。</td></tr>
+          <tr><td>（なし）</td><td>惰性で走り、少しずつ遅くなります。</td></tr>
+        </table></div>
+        <h3>ハンドル</h3>
+        <p>
+          🔄 スライダーをドラッグするか、<kbd>←</kbd> / <kbd>→</kbd> キーで少しずつ切ります。<kbd>C</kbd> で中央に戻ります。
+          スライダーは手を離してもその位置のままなので、コーナーを抜けたらまっすぐに戻してください。
+        </p>
+        <div class="note">
+          高速走行中は、車が安定するように、スライダーで指示した角度より小さくしか切れません。
+          目安は、100 km/h で指示の約 40&nbsp;%、200 km/h で約 15&nbsp;%、最高速付近では 10&nbsp;% 未満です。
+          実際に切れている角度は HUD の「ステア」で確認できます。
+          つまり、<b>コーナーの手前で減速してから曲がる</b>のがコツです。
+        </div>
+        <h3>モナコを走るコツ</h3>
+        <ul>
+          <li>道幅が狭く、両側はすべてガードレールです。はみ出せる余地はありません。</li>
+          <li>サント・デボート（1コーナー）、カジノ、ヘアピン、トンネル出口のシケイン、ラスカスでは十分に減速してください。</li>
+          <li>いちばん速度が出るのは、トンネルと港沿いの区間です。</li>
+          <li>ガードレールに引っかかったら、<b>◀ 後退</b> と <b>🔺 加速</b> で少し下がってから前進します。<b>↺</b> でスタート位置に戻ることもできます。</li>
+        </ul>
+
+        <h2 id="ja-demo">4. デモ走行</h2>
+        <p>
+          <b>🤖 デモ</b> では自動運転が走行ラインをなぞって走ります。
+          あらかじめ計算した速度計画に沿って、各コーナーの手前で減速します。1周は2分強です。
+        </p>
+        <ul>
+          <li>モードは走行中でもいつでも切り替えられます。</li>
+          <li><b>🎮 手動</b> に切り替えると、その時点の速度のまま運転を引き継ぎます。このとき <b>▶ 前進</b> と <b>⏸ 維持</b> が選ばれ、ハンドルはまっすぐになります。</li>
+          <li>デモに戻すと、車がいる場所から自動運転が再開します。</li>
+        </ul>
+        <figure>
+          <img src="manual/trackside-ja.jpg" alt="デモ走行中の車を定点カメラから見た画面" loading="lazy" />
+          <figcaption>定点カメラから見たデモ走行</figcaption>
+        </figure>
+
+        <h2 id="ja-cameras">5. カメラ</h2>
+        <div class="shots">
+          <figure><img src="manual/cockpit-ja.jpg" alt="運転席ビュー" loading="lazy" /><figcaption>🪖 運転席</figcaption></figure>
+          <figure><img src="manual/chase-ja.jpg" alt="後方ビュー" loading="lazy" /><figcaption>🚗 後方</figcaption></figure>
+          <figure><img src="manual/trackside-ja.jpg" alt="定点ビュー" loading="lazy" /><figcaption>🎥 定点</figcaption></figure>
+        </div>
+        <div class="table-wrap"><table>
+          <tr><th>カメラ</th><th>見え方</th></tr>
+          <tr><td><b>🪖 運転席</b></td><td>ドライバーの目線です。ハロー、前輪、ノーズが目の前に見えます。</td></tr>
+          <tr><td><b>🚗 後方</b></td><td>車のやや後ろ上方からの視点です。いちばん運転しやすいビューです。</td></tr>
+          <tr><td><b>🎥 定点</b></td><td>観客の目線です。コース脇に約 130 m ごとにカメラ位置があり、いちばん近いカメラがテレビ中継のようにズームしながら車を追います。車が通り過ぎると次のカメラに切り替わります。</td></tr>
+        </table></div>
+        <p><kbd>V</kbd> キーでカメラを順に切り替えられます。</p>
+
+        <h2 id="ja-laps">6. ラップタイム</h2>
+        <ul>
+          <li>車はチェッカー模様のスタートラインのすぐ手前から出発します。そのあいだ HUD には「周回：スタート前」と表示されます。</li>
+          <li>ラインを越えると1周目が始まり、タイム計測が始まります。以後はラインを越えるたびに1周が終わり、「前周」と「ベスト」が更新されます。</li>
+          <li>タイムはシミュレーション内の時間で測っています。パソコンの処理が追いつかなくても、タイムは正しく計測されます。</li>
+          <li><b>↺</b>（リセット）を押すと、スタート位置に戻り、タイムも消えます。</li>
+        </ul>
+
+        <h2 id="ja-warnings">7. 警告とアラート音</h2>
+        <div class="table-wrap"><table>
+          <tr><th>警告</th><th>出るとき</th><th>その後</th></tr>
+          <tr><td><b>⚠ クラッシュ</b></td><td>ガードレールに触れたとき</td><td>画面が赤く点滅し、警告音が3回鳴ります。離れてから 1.5 秒で消え、そのまま走行を続けられます。</td></tr>
+          <tr><td><b>⚠ 範囲外</b></td><td>マップの端に着いたとき</td><td>クラッシュと同じです。端には見えない壁があります。</td></tr>
+          <tr><td><b>⚠ 転倒</b></td><td>車体が約 73° 以上傾いたまま 0.2 秒たったとき</td><td>シミュレーションが止まり、警告は出たままになります。<b>↺</b> で再開します。</td></tr>
+        </table></div>
+        <div class="note">
+          ブラウザは、ページを操作するまで音を出せません。警告音は <b>▶ 開始</b> を一度押すと鳴るようになります。
+          <code>autostart</code> 付きのリンクで開いたときは、<b>▶ 開始</b> を一度押してください。
+        </div>
+
+        <h2 id="ja-keys">8. キーボード操作</h2>
+        <div class="table-wrap"><table>
+          <tr><th>キー</th><th>操作</th><th>使えるモード</th></tr>
+          <tr><td><kbd>←</kbd> <kbd>→</kbd></td><td>ハンドルを左 / 右に1段切る</td><td>手動</td></tr>
+          <tr><td><kbd>C</kbd></td><td>ハンドルを中央に戻す</td><td>手動</td></tr>
+          <tr><td><kbd>F</kbd> <kbd>S</kbd> <kbd>R</kbd></td><td>前進 / 停止 / 後退</td><td>手動</td></tr>
+          <tr><td><kbd>Space</kbd> または <kbd>W</kbd></td><td>加速 ON / OFF</td><td>手動</td></tr>
+          <tr><td><kbd>H</kbd></td><td>維持 ON / OFF</td><td>手動</td></tr>
+          <tr><td><kbd>B</kbd></td><td>減速 ON / OFF</td><td>手動</td></tr>
+          <tr><td><kbd>V</kbd></td><td>カメラ切り替え</td><td>両方</td></tr>
+          <tr><td><kbd>M</kbd></td><td>手動 ⇄ デモ</td><td>両方</td></tr>
+          <tr><td><kbd>L</kbd></td><td>English ⇄ 日本語</td><td>両方</td></tr>
+        </table></div>
+        <p>ボタンにマウスを乗せると、対応するキーが表示されます。</p>
+
+        <h2 id="ja-url">9. リンクのオプション</h2>
+        <p>アプリのアドレスに付けると、その状態で開きます。リンクを共有するときに便利です。</p>
+        <div class="table-wrap"><table>
+          <tr><th>オプション</th><th>値</th></tr>
+          <tr><td><code>mode</code></td><td><code>manual</code>（手動）または <code>demo</code>（デモ）</td></tr>
+          <tr><td><code>view</code></td><td><code>cockpit</code>（運転席）、<code>chase</code>（後方）、<code>trackside</code>（定点）</td></tr>
+          <tr><td><code>lang</code></td><td><code>en</code> または <code>ja</code></td></tr>
+          <tr><td><code>autostart</code></td><td>（値なし）すぐに走行を開始する</td></tr>
+        </table></div>
+        <p>例：<code>index.html?mode=demo&amp;view=trackside&amp;lang=ja&amp;autostart</code> と付けると、定点カメラでデモ走行を日本語表示のまま始めます。</p>
+
+        <h2 id="ja-trouble">10. 困ったときは</h2>
+        <div class="table-wrap"><table>
+          <tr><th>症状</th><th>対処</th></tr>
+          <tr><td>「モナコを読み込み中…」のまま進まない</td><td>最初は約 14 MB をダウンロードするので、少し待ってください。アプリは Web サーバー経由で開く必要があります（例：<code>npm run dev</code>）。<code>index.html</code> をファイルとして直接開いても動きません。</td></tr>
+          <tr><td>「読み込みに失敗しました」と出る</td><td>ページを再読み込みしてください。メッセージの後ろに、読み込めなかったファイル名が表示されます。</td></tr>
+          <tr><td>画面が黒い・何も映らない</td><td>WebGL と WebAssembly が使えるブラウザが必要です。最新の Chrome・Edge・Firefox・Safari を使い、ハードウェアアクセラレーションが有効か確認してください。</td></tr>
+          <tr><td>動きがカクカクする・遅い</td><td>ウィンドウを小さくするか、重いタブを閉じてください。このアプリは毎フレーム2画面（メインと上空マップ）を描いています。</td></tr>
+          <tr><td>車が動かない</td><td>状態表示が「走行中」か、<b>▶ 前進</b> が選ばれているか、<b>🔺 加速</b> が押されているかを確認してください。転倒した後は <b>↺</b> を押します。</td></tr>
+          <tr><td>高速で曲がらない</td><td>速度に応じてハンドルの切れ角を絞っているためです。先に減速してください。</td></tr>
+          <tr><td>音が出ない</td><td><b>▶ 開始</b> を一度押し、タブがミュートになっていないか確認してください。</td></tr>
+        </table></div>
+
+        <h2 id="ja-credits">11. 地図データとクレジット</h2>
+        <ul>
+          <li>地形：SRTM 1 秒角標高データ</li>
+          <li>衛星画像：<a href="https://s2maps.eu" target="_blank" rel="noopener">Sentinel-2 cloudless 2016</a>、EOX IT Services GmbH（contains modified Copernicus Sentinel data 2016）、CC BY 4.0</li>
+          <li>街路・街区・公園・サーキットの形は、サーキット概略図から読み取りました。建物は簡略化しており、高さは実測ではなく目安です。</li>
+          <li>物理エンジン：<a href="https://mujoco.org" target="_blank" rel="noopener">MuJoCo</a>、描画：<a href="https://threejs.org" target="_blank" rel="noopener">three.js</a></li>
+          <li>マシンは、紺・赤・黄の配色の汎用的な F1 風モデルです。チームやスポンサーのロゴは入っていません。</li>
+          <li>実際のコースとの違い：読み取ったコースは 3,211 m です（実際は 3,337 m）。ラスカスとヘアピンは、車が曲がり切れるよう少しなだらかにしています。</li>
+        </ul>
+      </article>
+
+      <footer>
+        <span lang="en">Monaco Street Circuit — MuJoCo web app.</span>
+        <span lang="ja">モナコ市街地サーキット — MuJoCo Web アプリ</span>
+      </footer>
+    </main>
+
+    <script>
+      // Language: ?lang= wins, then the app's saved choice, then the browser language.
+      const STORE_KEY = 'monaco-lang';
+      function initialLang() {
+        const q = new URLSearchParams(location.search).get('lang');
+        if (q === 'en' || q === 'ja') return q;
+        try {
+          const saved = localStorage.getItem(STORE_KEY);
+          if (saved === 'en' || saved === 'ja') return saved;
+        } catch {}
+        return navigator.language.startsWith('ja') ? 'ja' : 'en';
+      }
+      function setLang(lang) {
+        document.body.dataset.lang = lang;
+        document.documentElement.lang = lang;
+        document.title = lang === 'ja'
+          ? 'モナコ市街地サーキット – 使用マニュアル'
+          : 'Monaco Street Circuit – User Manual';
+        for (const b of document.querySelectorAll('[data-set-lang]')) {
+          b.setAttribute('aria-pressed', String(b.dataset.setLang === lang));
+        }
+        try { localStorage.setItem(STORE_KEY, lang); } catch {}
+      }
+      for (const b of document.querySelectorAll('[data-set-lang]')) {
+        b.addEventListener('click', () => setLang(b.dataset.setLang));
+      }
+      setLang(initialLang());
+    </script>
+  </body>
+</html>
