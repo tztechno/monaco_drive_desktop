@@ -6,4 +6,4 @@ src-tauri/target/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-
+dist_windows/
